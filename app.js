@@ -23,6 +23,20 @@ const listingRouter=require("./routes/listing.js");
 const reviewRouter=require("./routes/reviews.js");
 const userRouter=require("./routes/user.js");
 
+
+// app.use(passport.initialize());
+// app.use(passport.session());
+// passport.use(new LocalStrategy(User.authenticate()));
+// passport.serializeUser(User.serializeUser());
+// passport.deserializeUser(User.deserializeUser());
+
+// app.use((req,res,next)=>{
+//   res.locals.success=req.flash("success");
+//   res.locals.error=req.flash("error");
+//   res.locals.currUser=req.user;
+//   next();
+// });
+
 // const MONGO_URL="mongodb://127.0.0.1:27017/WanderLust";
 const dbUrl=process.env.ATLASDB_URL;
 main()
@@ -84,6 +98,10 @@ app.use((req,res,next)=>{
   res.locals.currUser=req.user;
   next();
 });
+app.use((req, res, next) => {
+  res.locals.currUser = req.user; // this makes currUser available in all EJS files
+  next();
+});
 
 // app.get("/demouser",async(req,res)=>{
 //   let fakeuser=new User({
@@ -98,6 +116,14 @@ app.use((req,res,next)=>{
 app.use("/listings",listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
 app.use("/",userRouter);
+
+
+app.use((req,res,next)=>{
+  res.locals.success=req.flash("success");
+  res.locals.error=req.flash("error");
+  res.locals.currUser=req.user;
+  next();
+});
 
 // app.all("*",(req,res,next)=>{
 //   next(new ExpressError(404,"Page Not Found!"));
