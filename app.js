@@ -24,20 +24,7 @@ const reviewRouter=require("./routes/reviews.js");
 const userRouter=require("./routes/user.js");
 
 
-// app.use(passport.initialize());
-// app.use(passport.session());
-// passport.use(new LocalStrategy(User.authenticate()));
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
 
-// app.use((req,res,next)=>{
-//   res.locals.success=req.flash("success");
-//   res.locals.error=req.flash("error");
-//   res.locals.currUser=req.user;
-//   next();
-// });
-
-// const MONGO_URL="mongodb://127.0.0.1:27017/WanderLust";
 const dbUrl=process.env.ATLASDB_URL;
 main()
   .then(()=>{
@@ -59,7 +46,7 @@ app.use(express.static(path.join(__dirname,"public")));
 const store =MongoStore.create({
   mongoUrl:dbUrl,
   crypto:{
-    secret:"mysupersecretcode"
+    secret:process.env.SECRET,
   },
   touchAfter:24*3600,
 });
@@ -70,7 +57,7 @@ store.on("error",()=>{
 
 const sessionOptions={
   store,
-  secret:"mysupersecretcode",
+  secret:process.env.SECRET,
   resave:false,
   saveUninitialized:true,
   cookie:{
